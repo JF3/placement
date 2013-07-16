@@ -17,7 +17,7 @@ int main (int argc, char* argv[])
 	MPI_Comm_size(MPI_COMM_WORLD, &nProcs);
 	
 	if (myProc == 0)
-		printf("mpi\tomp\tcorei\n");
+		printf("mpi\tomp\tcore\n");
 	for (impi = 0; impi < nProcs; impi++)
 	{
 		MPI_Barrier( MPI_COMM_WORLD );
@@ -57,8 +57,11 @@ int main (int argc, char* argv[])
 			}
 		}
 	}
+	MPI_Barrier( MPI_COMM_WORLD );
+	
 	if (myProc == 0)
-		printf("by JFEngels (mail@jfengels.de)");
+		printf("by JFEngels (mail@jfengels.de)\n");
+
 	MPI_Finalize();
 	exit(0);
 
