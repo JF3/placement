@@ -5,9 +5,26 @@
 #include<omp.h>
 #include<mpi.h>
 
+/**
+Copyright (C) 2013 JFEngels
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 int main (int argc, char* argv[])
 {
-	int impi, iomp, jomp;
+	int impi, iomp;
 
 	int myProc;
 	int nProcs;
@@ -17,7 +34,12 @@ int main (int argc, char* argv[])
 	MPI_Comm_size(MPI_COMM_WORLD, &nProcs);
 	
 	if (myProc == 0)
+	{
+		printf("Checking the placement of your job.\n");
+		printf("by JFEngels (mail@jfengels.de)\n\n");
 		printf("mpi\tomp\tcore\n");
+		printf("rank\tthread\n");
+	}
 	for (impi = 0; impi < nProcs; impi++)
 	{
 		MPI_Barrier( MPI_COMM_WORLD );
@@ -27,7 +49,7 @@ int main (int argc, char* argv[])
 
 		for (iomp = 0; iomp < omp_get_max_threads(); iomp++)
 		{
-			#pragma omp parallel //for schedule(dynamic,1)
+			#pragma omp parallel 
 			{
 				#pragma omp barrier
 				if (iomp == omp_get_thread_num())
@@ -59,9 +81,6 @@ int main (int argc, char* argv[])
 	}
 	MPI_Barrier( MPI_COMM_WORLD );
 	
-	if (myProc == 0)
-		printf("by JFEngels (mail@jfengels.de)\n");
-
 	MPI_Finalize();
 	exit(0);
 

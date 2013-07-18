@@ -1,4 +1,8 @@
-intel:
+intel.intel:
 	mpiicc main.c -o placement.intel.intel -openmp
 
-gnu:
+gnu.intel:
+	mpigcc main.c -o placement.gnu.intel -fopenmp
+
+intel.open:
+	icc main.c -o placement.intel.open -openmp
