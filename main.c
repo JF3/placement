@@ -5,9 +5,11 @@
 #include<omp.h>
 #include<mpi.h>
 #include<stdlib.h>
+#include <unistd.h>
+
 
 /**
-Copyright (C) 2013 JFEngels
+Copyright (C) 2013-2015 JFEngels
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,11 +35,16 @@ int main (int argc, char* argv[])
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myProc);
 	MPI_Comm_size(MPI_COMM_WORLD, &nProcs);
+
+
+	int nCoresInSystem;
+	nCoresInSystem = sysconf( _SC_NPROCESSORS_ONLN );
 	
 	if (myProc == 0)
 	{
 		printf("Checking the placement of your job.\n");
-		printf("by JFEngels (mail@jfengels.de)\n\n");
+		printf("by JFEngels (software (at) jfengels . de)\n\n");
+		printf("This system seems to have %d cores.\n", nCoresInSystem);
 		printf("mpi\tomp\tcore\n");
 		printf("rank\tthread\n");
 	}
@@ -60,24 +67,25 @@ int main (int argc, char* argv[])
 					sched_getaffinity(0, sizeof(cpu_set_t), &cpuSet);
 				
 					int i=0;
-					int cpunum;
 
 					printf("%d\t%d\t", impi, iomp);
-					for (i=0; i < CPU_SETSIZE; i++)
+
+					if (CPU_COUNT(&cpuSet) == nCoresInSystem)
 					{
-						if (CPU_ISSET(i, &cpuSet))
+						printf("any");
+					}
+					else
+					{
+						for (i=0; i < CPU_SETSIZE; i++)
 						{
-							cpunum=i;
-							printf("%2d ", i);
+							if (CPU_ISSET(i, &cpuSet))
+							{
+								printf("%2d ", i);
+							}
 						}
 					}
 					printf("\n");
 				
-//					if (CPU_COUNT(&cpuSet)==1)
-//						printf("%d\t%d\t%d\n", impi, iomp, cpunum);
-//					else
-//						printf("%d\t%d\tany\n", impi, iomp);
-	
 					fflush(stdout);
 				}
 			}
