@@ -4,6 +4,7 @@
 #include<stdio.h>
 #include<omp.h>
 #include<mpi.h>
+#include<stdlib.h>
 
 /**
 Copyright (C) 2013 JFEngels
@@ -61,18 +62,21 @@ int main (int argc, char* argv[])
 					int i=0;
 					int cpunum;
 
+					printf("%d\t%d\t", impi, iomp);
 					for (i=0; i < CPU_SETSIZE; i++)
 					{
 						if (CPU_ISSET(i, &cpuSet))
 						{
 							cpunum=i;
+							printf("%2d ", i);
 						}
 					}
+					printf("\n");
 				
-					if (CPU_COUNT(&cpuSet)==1)
-						printf("%d\t%d\t%d\n", impi, iomp, cpunum);
-					else
-						printf("%d\t%d\t%c\n", impi, iomp, '-');
+//					if (CPU_COUNT(&cpuSet)==1)
+//						printf("%d\t%d\t%d\n", impi, iomp, cpunum);
+//					else
+//						printf("%d\t%d\tany\n", impi, iomp);
 	
 					fflush(stdout);
 				}
