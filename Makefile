@@ -6,3 +6,6 @@ gnu.intel:
 
 intel.open:
 	icc main.c -o placement.intel.open -openmp
+
+gnu.open:
+	mpicc main.c -o placement.gnu.open -fopenmp
