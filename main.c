@@ -55,6 +55,11 @@ int main (int argc, char* argv[])
 		if (impi != myProc)
 			continue;
 
+		char hostname[512];
+		hostname[511] = '\0';
+		gethostname(hostname, 511);
+		printf("#hostname for mpi task %d: %s\n", impi, hostname);
+
 		for (iomp = 0; iomp < omp_get_max_threads(); iomp++)
 		{
 			#pragma omp parallel 
